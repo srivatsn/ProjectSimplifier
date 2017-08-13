@@ -141,15 +141,21 @@ namespace ProjectSimplifier
 
         private void AddTargetFrameworkProperty()
         {
-            if (_sdkBaselineProject.GlobalProperties.Contains("TargetFramework", StringComparer.OrdinalIgnoreCase))
+            var globalProperties = _sdkBaselineProject.GlobalProperties;
+            if (globalProperties.Contains("TargetFramework", StringComparer.OrdinalIgnoreCase))
             {
                 // The original project had a TargetFramework property. No need to add it again.
+                return;
+            }
+            if (globalProperties.Contains("TargetFrameworks", StringComparer.OrdinalIgnoreCase))
+            {
+                // The original project had a TargetFrameworks property. No need to add it again.
                 return;
             }
 
             var propGroup = GetOrCreateEmptyPropertyGroup();
 
-            var targetFrameworkElement = _projectRootElement.CreatePropertyElement("TargetFramework");
+            var targetFrameworkElement = _projectRootElement.CreatePropertyElement("TargetFrameworks");
             targetFrameworkElement.Value = _sdkBaselineProject.Project.FirstConfiguredProject.GetProperty("TargetFramework").EvaluatedValue;
             propGroup.PrependChild(targetFrameworkElement);
         }
@@ -165,7 +171,7 @@ namespace ProjectSimplifier
                 return propertyGroup.Location.Line > firstImport.Location.Line;
             }
 
-            return _projectRootElement.PropertyGroups.FirstOrDefault(pg => pg.Condition == "" && 
+            return _projectRootElement.PropertyGroups.FirstOrDefault(pg => pg.Condition == "" &&
                                                                      IsAfterFirstImport(pg))
                     ?? _projectRootElement.AddPropertyGroup();
         }
