@@ -81,16 +81,15 @@ namespace ProjectSimplifier
 
         private static string GetTargetFrameworkFromProjectJson(IProject project)
         {
-            string projectFolder = project.GetPropertyValue("MSBuildProjectDirectory");
-            string projectJsonPath = Path.Combine(projectFolder, "project.json");
+            var projectFolder = project.GetPropertyValue("MSBuildProjectDirectory");
+            var projectJsonPath = Path.Combine(projectFolder, "project.json");
 
-            string projectJsonContents = File.ReadAllText(projectJsonPath);
+            var projectJsonContents = File.ReadAllText(projectJsonPath);
 
             var json = JObject.Parse(projectJsonContents);
 
             var frameworks = json["frameworks"];
-            string tf = ((JProperty)frameworks.Single()).Name;
-            return tf;
+            return ((JProperty)frameworks.Single()).Name;
         }
     }
 }

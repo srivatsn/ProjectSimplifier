@@ -27,10 +27,10 @@ namespace ProjectSimplifier
                 return string.Empty; // no condition. Returns empty string to match MSBuild.
             }
 
-            string left = string.Empty;
-            string right = string.Empty;
+            var left = string.Empty;
+            var right = string.Empty;
 
-            foreach (string key in dimensionalValues.Keys)
+            foreach (var key in dimensionalValues.Keys)
             {
                 if (!string.IsNullOrEmpty(left))
                 {
@@ -42,7 +42,7 @@ namespace ProjectSimplifier
                 right += dimensionalValues[key];
             }
 
-            string condition = "'" + left + "'=='" + right + "'";
+            var condition = "'" + left + "'=='" + right + "'";
             return condition;
         }
 
@@ -84,7 +84,7 @@ namespace ProjectSimplifier
                 return true;
             }
 
-            int equalPos = condition.IndexOf("==", StringComparison.OrdinalIgnoreCase);
+            var equalPos = condition.IndexOf("==", StringComparison.OrdinalIgnoreCase);
             if (equalPos <= 0)
             {
                 return false;
@@ -99,8 +99,8 @@ namespace ProjectSimplifier
                 return false;
             }
 
-            string[] dimensionNamesInCondition = left.Split(new char[] { '|' });
-            string[] dimensionValuesInCondition = right.Split(new char[] { '|' });
+            var dimensionNamesInCondition = left.Split(new char[] { '|' });
+            var dimensionValuesInCondition = right.Split(new char[] { '|' });
 
             // number of keys need to match number of values
             if (dimensionNamesInCondition.Length == 0 || dimensionNamesInCondition.Length != dimensionValuesInCondition.Length)
@@ -108,9 +108,9 @@ namespace ProjectSimplifier
                 return false;
             }
 
-            Dictionary<string, string> parsedDimensionalValues = new Dictionary<string, string>(dimensionNamesInCondition.Length);
+            var parsedDimensionalValues = new Dictionary<string, string>(dimensionNamesInCondition.Length);
 
-            for (int i = 0; i < dimensionNamesInCondition.Length; i++)
+            for (var i = 0; i < dimensionNamesInCondition.Length; i++)
             {
                 // matches "$(name)" patern.
                 var match = DimensionNameInConditionRegex.Match(dimensionNamesInCondition[i]);
@@ -119,7 +119,7 @@ namespace ProjectSimplifier
                     return false;
                 }
 
-                string dimensionName = match.Groups[1].ToString();
+                var dimensionName = match.Groups[1].ToString();
                 if (string.IsNullOrEmpty(dimensionName))
                 {
                     return false;

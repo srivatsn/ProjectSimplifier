@@ -15,7 +15,7 @@ namespace ProjectSimplifier
 
         public void LoadProjects(Options options)
         {
-            string projectFilePath = Path.GetFullPath(options.ProjectFilePath);
+            var projectFilePath = Path.GetFullPath(options.ProjectFilePath);
 
             if (!File.Exists(projectFilePath))
             {
@@ -23,7 +23,7 @@ namespace ProjectSimplifier
                 return;
             }
 
-            ImmutableDictionary<string, string> globalProperties = InitializeGlobalProperties(options);
+            var globalProperties = InitializeGlobalProperties(options);
             var collection = new ProjectCollection(globalProperties);
 
             ProjectRootElement = new MSBuildProjectRootElement(Microsoft.Build.Construction.ProjectRootElement.Open(projectFilePath, collection, preserveFormatting: true));
