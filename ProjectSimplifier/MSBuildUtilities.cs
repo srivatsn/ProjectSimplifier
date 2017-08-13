@@ -113,7 +113,7 @@ namespace ProjectSimplifier
             for (int i = 0; i < dimensionNamesInCondition.Length; i++)
             {
                 // matches "$(name)" patern.
-                Match match = DimensionNameInConditionRegex.Match(dimensionNamesInCondition[i]);
+                var match = DimensionNameInConditionRegex.Match(dimensionNamesInCondition[i]);
                 if (!match.Success)
                 {
                     return false;

@@ -89,7 +89,7 @@ namespace ProjectSimplifier
 
                 foreach (var item in itemGroup.Items)
                 {
-                    ItemsDiff itemTypeDiff = itemsDiff.FirstOrDefault(id => id.ItemType.Equals(item.ItemType, StringComparison.OrdinalIgnoreCase));
+                    var itemTypeDiff = itemsDiff.FirstOrDefault(id => id.ItemType.Equals(item.ItemType, StringComparison.OrdinalIgnoreCase));
                     if (!itemTypeDiff.DefaultedItems.IsDefault)
                     {
                         var defaultedItems = itemTypeDiff.DefaultedItems.Select(i => i.EvaluatedInclude);

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Immutable;
 using System.Linq;
-using Microsoft.Build.Evaluation;
 
 namespace ProjectSimplifier
 {

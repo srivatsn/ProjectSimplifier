@@ -86,7 +86,7 @@ namespace ProjectSimplifier
 
             string projectJsonContents = File.ReadAllText(projectJsonPath);
 
-            JObject json = JObject.Parse(projectJsonContents);
+            var json = JObject.Parse(projectJsonContents);
 
             var frameworks = json["frameworks"];
             string tf = ((JProperty)frameworks.Single()).Name;
