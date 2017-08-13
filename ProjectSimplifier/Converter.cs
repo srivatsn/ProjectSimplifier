@@ -125,7 +125,8 @@ namespace ProjectSimplifier
                                                 differ => differ.GetItemsDiff()
                                                                 .Where(diff => Facts.GlobbedItemTypes.Contains(diff.ItemType, StringComparer.OrdinalIgnoreCase))
                                                                 .SelectMany(diff => diff.IntroducedItems))
-                                          .Distinct(ProjectItemComparer.IncludeComparer);
+                                          .Distinct(ProjectItemComparer.IncludeComparer)
+                                          .ToList();
 
             if (introducedItems.Any())
             {
