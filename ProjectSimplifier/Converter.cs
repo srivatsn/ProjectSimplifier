@@ -167,7 +167,7 @@ namespace ProjectSimplifier
                 if (_sdkBaselineProject.ProjectStyle == ProjectStyle.Default)
                     return true;
 
-                var firstImport = _projectRootElement.Imports.Where(i => i.Label != Facts.SharedProjectsImportLabel).First();
+                var firstImport = _projectRootElement.Imports.First(i => i.Label != Facts.SharedProjectsImportLabel);
                 return propertyGroup.Location.Line > firstImport.Location.Line;
             }
 
