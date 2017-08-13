@@ -25,6 +25,7 @@ namespace ProjectSimplifier
             ChangeImports();
 
             RemoveDefaultedProperties();
+            RemoveRefs();
             AddTargetFrameworkProperty();
             AddTargetProjectProperties();
 
@@ -76,6 +77,24 @@ namespace ProjectSimplifier
                 if (propGroup.Properties.Count == 0 && string.IsNullOrEmpty(configurationName))
                 {
                     _projectRootElement.RemoveChild(propGroup);
+                }
+            }
+        }
+        private void RemoveRefs()
+        {
+            foreach (var itemGroup in _projectRootElement.ItemGroups)
+            {
+                foreach (var item in itemGroup.Items)
+                {
+                    if (string.Equals(item.ItemType, "Reference", StringComparison.OrdinalIgnoreCase))
+                    {
+                        itemGroup.RemoveChild(item);
+                    }
+                }
+
+                if (itemGroup.Items.Count == 0)
+                {
+                    _projectRootElement.ItemGroups.Remove(itemGroup);
                 }
             }
         }

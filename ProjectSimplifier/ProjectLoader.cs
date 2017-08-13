@@ -12,7 +12,7 @@ namespace ProjectSimplifier
         public UnconfiguredProject Project { get; private set; }
         public BaselineProject SdkBaselineProject { get; private set; }
         public IProjectRootElement ProjectRootElement { get; private set; }
-        
+
         public void LoadProjects(Options options)
         {
             string projectFilePath = Path.GetFullPath(options.ProjectFilePath);
@@ -71,7 +71,7 @@ namespace ProjectSimplifier
                 var firstImportFileName = Path.GetFileName(firstImport.Project);
                 var lastImportFileName = Path.GetFileName(lastImport.Project);
 
-                if (Facts.PropsConvertibleToSDK.Contains(firstImportFileName, StringComparer.OrdinalIgnoreCase) && 
+                if (Facts.PropsConvertibleToSDK.Contains(firstImportFileName, StringComparer.OrdinalIgnoreCase) &&
                     Facts.TargetsConvertibleToSDK.Contains(lastImportFileName, StringComparer.OrdinalIgnoreCase))
                 {
                     return ProjectStyle.Default;
@@ -103,10 +103,10 @@ namespace ProjectSimplifier
         /// We need to use the same name as the original csproj and same path so that all the default that derive
         /// from name\path get the right values (there are a lot of them).
         /// </summary>
-        private BaselineProject CreateSdkBaselineProject(string projectFilePath, 
-                                                         IProject project, 
-                                                         ImmutableDictionary<string, string> globalProperties, 
-                                                         ImmutableDictionary<string, ImmutableDictionary<string, string>> configurations, 
+        private BaselineProject CreateSdkBaselineProject(string projectFilePath,
+                                                         IProject project,
+                                                         ImmutableDictionary<string, string> globalProperties,
+                                                         ImmutableDictionary<string, ImmutableDictionary<string, string>> configurations,
                                                          ImmutableDictionary<string, string> targetProjectProperties)
         {
             var projectStyle = GetProjectStyle(ProjectRootElement);
