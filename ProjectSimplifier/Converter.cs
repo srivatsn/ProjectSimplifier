@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Linq;
 using Microsoft.Build.Construction;
 
@@ -25,7 +26,7 @@ namespace ProjectSimplifier
             ChangeImports();
 
             RemoveDefaultedProperties();
-            RemoveRefs();
+            ConvertRefs();
             AddTargetFrameworkProperty();
             AddTargetProjectProperties();
 
@@ -80,22 +81,36 @@ namespace ProjectSimplifier
                 }
             }
         }
-        private void RemoveRefs()
+        private void ConvertRefs()
         {
+            var packageReferences = _project.FirstConfiguredProject.GetPackages().ToList();
+            var packageIds = packageReferences.Select(x=>x.Id.ToLowerInvariant()).ToList();
             foreach (var itemGroup in _projectRootElement.ItemGroups)
             {
                 foreach (var item in itemGroup.Items)
                 {
-                    if (string.Equals(item.ItemType, "Reference", StringComparison.OrdinalIgnoreCase))
+                    if (!string.Equals(item.ItemType, "Reference", StringComparison.OrdinalIgnoreCase))
                     {
-                        itemGroup.RemoveChild(item);
+                        continue;
                     }
+                    var hintPath = item.Metadata.FirstOrDefault(x => string.Equals(x.Name, "HintPath", StringComparison.OrdinalIgnoreCase));
+                    if (hintPath == null)
+                    {
+                        continue;
+                    }
+                    var lowerHintPath = hintPath.Value.ToLowerInvariant();
+                    if (!packageIds.Any(packageId => lowerHintPath.Contains(packageId)))
+                    {
+                        continue;
+                    }
+                    itemGroup.RemoveChild(item);
                 }
-
-                if (itemGroup.Items.Count == 0)
-                {
-                    _projectRootElement.ItemGroups.Remove(itemGroup);
-                }
+            }
+            var newItemGroup = _projectRootElement.AddItemGroup();
+            foreach (var package in packageReferences)
+            {
+                var item = newItemGroup.AddItem("PackageReference", package.Id);
+                item.AddMetadata("Version", package.Version.ToOriginalString(), true);
             }
         }
 

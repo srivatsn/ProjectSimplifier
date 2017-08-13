@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using NuGet;
 
 namespace ProjectSimplifier
 {
@@ -24,6 +25,11 @@ namespace ProjectSimplifier
             if (!string.IsNullOrEmpty(tf))
             {
                 return tf;
+            }
+            var tfs = project.GetPropertyValue("TargetFrameworks");
+            if (!string.IsNullOrEmpty(tfs))
+            {
+                return tfs;
             }
 
             var tfi = project.GetPropertyValue("TargetFrameworkIdentifier");
@@ -90,6 +96,16 @@ namespace ProjectSimplifier
 
             var frameworks = json["frameworks"];
             return ((JProperty)frameworks.Single()).Name;
+        }
+
+        public static IEnumerable<PackageReference> GetPackages(this IProject project)
+        {
+            var projectFolder = project.GetPropertyValue("MSBuildProjectDirectory");
+            var projectJsonPath = Path.Combine(projectFolder, "packages.config");
+
+            var file = new PackageReferenceFile(projectJsonPath);
+
+            return file.GetPackageReferences();
         }
     }
 }
